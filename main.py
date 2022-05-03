@@ -13,13 +13,16 @@ You must use OOP and classes in some portion of your game. You can not just use 
 Use classes to help you define the Deck and the Player's hand.
 '''
 
+from cgi import test
 import random
 
 suits = ('Hearts', 'Diamonds', 'Spades', 'Clubs') 
 ranks = ('Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Ten', 'Jack', 'Queen', 'King', 'Ace') 
 values = {'Two': 2, 'Three': 3, 'Four': 4, 'Five': 5, 'Six': 6, 'Seven': 7, 'Eight': 8, 'Nine': 9, 'Ten': 10, 'Jack': 10, 'Queen': 10, 'King': 10, 'Ace': 11}
 
-class Card:
+playing = True
+
+class Card():
     def __init__(self, suit, rank) -> None:
         self.suit = suit
         self.rank = rank
@@ -29,7 +32,7 @@ class Card:
         return f'{self.rank} of {self.suit}'
 
 
-class Deck:
+class Deck():
     def __init__(self) -> None:
         self.deck = []
 
@@ -52,6 +55,42 @@ class Deck:
         return self.deck.pop()
 
 
-class Hand:
+class Hand():
     def __init__(self) -> None:
-        pass
+        self.cards = []
+        self.value = 0
+        self.aces = 0
+
+    def add_card(self, card):
+        self.cards.append(card)
+        self.value += values[card.rank]
+
+        if card.rank == 'Ace':
+            self.aces += 1
+
+    def adjust_for_ace(self):
+        while self.value > 21 and self.aces:
+            self.value -= 10 
+            self.aces -= 1
+
+
+class Chips():
+    def __init__(self, total=100) -> None:
+        self.total = total
+        self.bet = 0
+
+    def winning_bet(self):
+        self.total += self.bet
+
+    def lose_bet(self):
+        self.total -= self.bet
+
+test_deck = Deck()
+test_deck.shuffle()
+
+# Create player
+test_player = Hand()
+dealed_card = test_deck.deal()
+print(dealed_card)
+test_player.add_card(dealed_card)
+print(test_player.value)
